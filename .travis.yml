@@ -1,0 +1,29 @@
+language: php
+php:
+  - 5.6
+env:
+  global:
+    - secure: IVLwL2220se1OLqZZ0trA9WSHRfI1BfnqQKwEpuEy0n1eV/zSMhbmIFGBGQz4imeNpVkeAJtauMHGKcT2679TIDzKrc31ciRi7ViDWOcyEDSJ8BLF93oSztb8X7Zif1A/Jj2bfxJTBQ4cbHgn6G7VOOwbyKSpFsTa07ifv51+fAm5lcrwZSSz5Hm7Qyk39SPnXkfDkeKBj0FUgmEqbg9Vg/gwiL2N/F0i1c8nPfm083rvfSlq3OgCJnip6Bg0ZzzxCO+1w5NxPK3F0iAxbTgD1OOh14v+emzztWN8NNuSmjkOSY2Hme0MZFz6eoFUGk2GS5y7y9OjgW7H21tBciVmIGhmwT6QNY1AHlXMHLFtidBpmDLCVTu+2kZ+jUSCVJSDI3wGSABnrND2+1FrRPhJGzXRmPuvrQ1n55QQPNIv32J5XaXiTwZIHzCPswHGAa56y/Xp8t1wlws4pp7/bvaA5MU6FTQBUqsAahIXzZlMaF1cGl9lcpFjihT+dkA6n4vYxZO6u7JuRVpX05jkdPrm/p6hRqjUgGBt2XeFLm+/2Bizc9qAbQu15euC27f+Ghl0BFCLVfKkxZqUzpvTaeVCrM0Qa9i+dwPs5m/1z6d3YZ4+gKBPnnluCZCCVR435vJ6biQSeCqtAw7wAiBhSlZfMY4+89tMg2smiVqbKSC8gQ=
+    - secure: EwF9ddB0UOKqrCOO7dta30y2GEVagI8vri3k2003iUdwgMW8Ym1uUPWCIbT9gypIVlJdkHiIgdpZ0L55AAbZ/82z1/oqatVroATfoE1uHptDo01TArhXXxm+6D7zuy65ESCbcU3WDP7vRI2bOlLFTStsNPN0PWE2WErypgzlvwFDgkC0axNvkzajz7HCMjaIeHK+51zZN0l3A2UXOMbP+OWU9/K5A4Ik/+8iBTbmogYkewkza+y0R05RE0E7rM7FzyEMa2wBYL5bnetXC8pHj2DF0TXBSd+kpTUfS3eo0XoIlBMFg0DTwai7vzbeQ4dYVxBOFYeNuB4gpR/0oluAXLmBeW/qsWeh+/IDvk6HSj9SqfVmAqKAHGEhyRh0AUpJHjf1jNm06CFGDgE3v0TX5aUyRLrnFNZ+/+zbb5jcTHwMLx6gl0wM8wxpeY3vJoT4nf2YU/uBvWbkME59Ce2QvBRL6DIZnc3BFnhSIvqbKJzNuXU7KH9gvZ2N0VYx/UZ+RWNYGZ/KAfgdIYaAmiosiXfDhq/YqgZIhqO+RywmxokbCDoXKg3+fGNuW/3gZhGm2vZ/1izZDxEVThGEVxvxD/hJ++j1+olLklOHGQW70ffLOsDTqFUrB9EKMLSfoKBIQpex4Wyrr+RvRoxov3qSZrMik05Tf00rtc1cALJu3Tw=
+    - secure: xUuDGVmEQQUiwUnPDIV+t+yybwwCzgtyoDH8GyevdzIkz7wwaoYGZd4RTYYM81L4Re7yvk+LItqMYjNdTw1S1GyECVXC3FjlVxjZHMx/bXY18brnJfO9QLdCBxR/AJHQ+RxT6SoSuewUnmZNfus/YcYHVv0XI43GOsl0h69Kn5Pf4P5QpyJUzYdaN11kGBUyvoZ4Bl7P9TFVIT7QLy04pgla2LVYGFbXTER++kLG7z/BNOCKNUP6Dq5P8kdqwRdnqeSLWU/6wXc4bGbPGBNYup6Kv1I1x8PISaoct0kREnglm/5OiuDB2WrGAKqfJhVfUyp/PyfulI9UUqIygWrWCJ+MUoJk1MFDxE1Tu4MQEkLsnNcZu8U5u5lWTWg+6WLTeI28Kv4+cr3fOKwRIIEJI4LN7npoNGKuymmtMQOzgqVdzVuiSmKh9bnTpExkdMMVnAzh3Q2PZJmGox8P4dntGxAAkI/au4xDNy2vZZrjpiY1P6+vAVD7ENw7NZkQwqkRsNUOGcxb5i4EAD0eaZj0fjHBtMjsYk0GWv1t2CkF89fJWEQRhTYwocGEmIZHNZjnYwt5ic5Y52gHCjoRASobdH36XE5oulkIJSwBludg8u/r1qG9pQ20kIx1pVeQD4yIK55i8AA9MuozR8XtoatIkr1mwNWz3lluMXpdrbifq4I=
+before_script:
+  - composer self-update
+  - composer install --no-interaction
+  - cp .env.travis .env
+  - php artisan key:generate
+script:
+  - vendor/bin/phpunit
+before_install:
+  - openssl aes-256-cbc -K $encrypted_9dd8e127aefe_key -iv $encrypted_9dd8e127aefe_iv -in .travis/ssh.tar.enc -out ssh.tar -d
+  - tar xvf ssh.tar && rm -f ssh.tar
+  - mv ssh_config ~/.ssh/config
+  - mv ssh_key ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - eval $(ssh-agent)
+  - ssh-add ~/.ssh/id_rsa
+travisdeployer:
+  branches:
+    master: production
+  verbose: true
+after_success:
+  - vendor/bin/travisdeployer
